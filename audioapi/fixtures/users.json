@@ -1,0 +1,57 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "dan",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "Dan",
+            "first_name": "Dan",
+            "last_name": "P",
+            "email": "dan@dan.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2020-08-28T14:51:39.989Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "magic",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "simonfan111",
+            "first_name": "Bettie",
+            "last_name": "Grof",
+            "email": "magicwoman@ooo.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2020-08-28T14:51:39.989Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "lady",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "jtd",
+            "first_name": "Jake",
+            "last_name": "The Dog",
+            "email": "jtdawgzone@ooo.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2020-08-28T14:51:39.989Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    }
+]
+

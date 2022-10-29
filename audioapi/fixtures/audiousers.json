@@ -1,0 +1,33 @@
+[
+    
+        {
+            "model": "audioapi.audiouser",
+            "pk": 1,
+            "fields": {
+                "user": 1,
+                "address": "Nashville, TN",
+                "image": "https://i.kym-cdn.com/photos/images/newsfeed/000/679/977/b95.gif"
+            }
+        },
+    
+        {
+            "model": "audioapi.audiouser",
+            "pk": 2,
+            "fields": {
+                "user": 2,
+                "address": "Somewhere within the multiverse/GOLB domain",
+                "image": "https://static.wikia.nocookie.net/the-unofficial-adventure-time-encyclopedia/images/2/2e/Bettynew.png/revision/latest?cb=20170412232449"
+            }
+        },
+    
+        {
+            "model": "audioapi.audiouser",
+            "pk": 3,
+            "fields": {
+                "user": 3,
+                "address": "The Treehouse, Ooo",
+                "image": "https://4.bp.blogspot.com/-CtCD9PEmkWg/U1MYHczJbDI/AAAAAAAAIpA/m83llTMxOC8/s1600/Jake's+Time+Sandwich.png"
+            }
+        }
+]
+

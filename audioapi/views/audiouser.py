@@ -4,6 +4,10 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from audioapi.models import AudioUser
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
+
 
 
 class AudioUserView(ViewSet):
@@ -57,21 +61,25 @@ class AudioUserView(ViewSet):
         Returns
             Response -- JSON serialized audioUser instance
         """
-        # audioUserr = AudioUserr.objects.get(user=request.auth.user)
-        # audioUser_type = AudioUserType.objects.get(pk=request.data["audioUser_type"])
 
-        audioUser = AudioUser.objects.create(
-            title=request.data["title"],
-            description=request.data["description"],
-            designer=request.data["designer"],
-            year=request.data["year"],
-            players=request.data["players"],
-            playing_time=request.data["playing_time"],
-            age=request.data["age"]
+        new_user = User.objects.create_user(
+        username=request.data['username'],
+        password=request.data['password'],
+        email=request.data['email'],
+        first_name=request.data['first_name'],
+        last_name=request.data['last_name']
         )
-        audioUser.categories.add(request.data["category"])
-        serializer = AudioUserSerializer(audioUser)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        audiouser = AudioUser.objects.create(
+            address=request.data['address'],
+            image=request.data['image'],
+            user=new_user
+        )
+
+        token = Token.objects.create(user=audiouser.user)
+        data = { 'token': token.key }
+        return Response(data, status=status.HTTP_201_CREATED)
+
 
     def update(self, request, pk):
         """Handle PUT requests for a audioUser
@@ -81,15 +89,17 @@ class AudioUserView(ViewSet):
         """
 
         audioUser = AudioUser.objects.get(pk=pk)
-        audioUser.title = request.data["title"]
-        audioUser.description = request.data["description"]
-        audioUser.designer = request.data["designer"]
-        audioUser.year = request.data["year"]
-        audioUser.players = request.data["players"]
-        audioUser.playing_time = request.data["playing_time"]
-        audioUser.age = request.data["age"]
+        user = User.objects.get(pk=audioUser.user_id)
+        audioUser.address=request.data['address']
+        audioUser.image=request.data['image']
+        user.username=request.data['username']
+        user.email=request.data['email']
+        user.first_name=request.data['first_name']
+        user.last_name=request.data['last_name']
+        user.set_password(request.data['password'])
 
         audioUser.save()
+        user.save()
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 

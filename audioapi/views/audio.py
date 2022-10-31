@@ -6,6 +6,24 @@ from rest_framework import serializers, status
 from audioapi.models import Audio, Session, AudioUser
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 
+def verify(request):
+    # Verifying Ticks string
+    ticks_list=request.data["ticks"]
+    if len(ticks_list) != 15:
+        raise Exception('15 Audio ticks required')
+    for x in ticks_list:
+        if not -100 < x < -10 :
+            raise Exception('Ticks must all be between -10 and -100')
+
+    # Verify selected tick
+    selected = request.data["selected_tick"]
+    if not -1 < int(selected) < 15 :
+        raise Exception('Selected tick must be between 0 and 14')
+        
+    # Verify step count
+    count = request.data["step_count"]
+    if not -1 < int(count) < 10 :
+        raise Exception('Step count must be between 0 and 9')
 class AudioView(ViewSet):
     """Audio view"""
 
@@ -44,14 +62,9 @@ class AudioView(ViewSet):
         Returns
             Response -- JSON serialized audio + session instance
         """
-        # Verifying Ticks string
-        ticks_list=request.data["ticks"]
-        if len(ticks_list) != 15:
-            raise Exception('15 Audio ticks required')
-        for x in ticks_list:
-            if not -100 < x < -10 :
-                raise Exception('Ticks must all be between -10 and -100')
-
+        
+        # Verify audio data
+        verify(request)
 
         session = Session.objects.create(
             session=request.data["session_id"],
@@ -75,10 +88,14 @@ class AudioView(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
+        
+        verify(request)
 
         session = Session.objects.get(pk=pk)
         audio = Audio.objects.get(session_id=session.session)
 
+        # Currently allowing session ID to be modified-- if not desired can easily disable
+        # Currently not allowing associated user to be modified
         session.session = request.data["session_id"]
         session.ticks = request.data["ticks"]
         session.selected_tick = request.data["selected_tick"]
@@ -96,6 +113,7 @@ class AudioView(ViewSet):
         session.delete()
         audio.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
             
 
 

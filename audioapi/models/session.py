@@ -24,7 +24,7 @@ def validate_ticks(ticks_string):
 
 class Session(models.Model):
     session = models.IntegerField(primary_key=True, unique=True)
-    ticks = models.CharField(max_length=200, validators=[validate_ticks])
+    ticks = models.JSONField(max_length=200, validators=[validate_ticks])
     selected_tick = models.IntegerField(
         default=0,
         validators=[MaxValueValidator(14), MinValueValidator(0)]

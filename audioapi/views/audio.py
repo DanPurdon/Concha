@@ -29,6 +29,12 @@ class AudioView(ViewSet):
             Response -- JSON serialized list of audio data
         """
         audio = Audio.objects.all()
+
+        # Search Query
+        audio_id = request.query_params.get('id', None)
+        if audio_id is not None:
+            audio = audio.filter(session=audio_id)
+
         serializer = AudioSerializer(audio, many=True)
         return Response(serializer.data)
 

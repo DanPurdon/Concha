@@ -33,9 +33,9 @@ class AudioUserView(ViewSet):
             Response -- JSON serialized list of audioUsers
         """
         audioUsers = AudioUser.objects.all()
-        audioUser_id = request.query_params.get('id', None)
         
         # Search Queries
+        audioUser_id = request.query_params.get('id', None)
         if audioUser_id is not None:
             audioUsers = audioUsers.filter(id=audioUser_id)
         audioUser_first_name = request.query_params.get('firstname', None)

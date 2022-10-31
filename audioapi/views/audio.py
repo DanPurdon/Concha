@@ -70,21 +70,24 @@ class AudioView(ViewSet):
         """
 
         session = Session.objects.get(pk=pk)
-        session.title = request.data["title"]
-        session.description = request.data["description"]
-        session.designer = request.data["designer"]
-        session.year = request.data["year"]
-        session.players = request.data["players"]
-        session.playing_time = request.data["playing_time"]
-        session.age = request.data["age"]
+        audio = Audio.objects.get(session_id=session.session)
+
+        session.session = request.data["session_id"]
+        session.ticks = request.data["ticks"]
+        session.selected_tick = request.data["selected_tick"]
+        session.step_count = request.data["step_count"]
+        audio.session_id = request.data["session_id"]
 
         session.save()
+        audio.save()
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk):
         session = Session.objects.get(pk=pk)
+        audio = Audio.objects.get(session_id=session.session)
         session.delete()
+        audio.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
             
 

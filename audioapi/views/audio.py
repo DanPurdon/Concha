@@ -4,7 +4,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from audioapi.models import Audio, Session, AudioUser
-
+from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 
 class AudioView(ViewSet):
     """Audio view"""
@@ -44,8 +44,14 @@ class AudioView(ViewSet):
         Returns
             Response -- JSON serialized audio + session instance
         """
-        
-        audiouser = AudioUser.objects.get(user=request.auth.user)
+        # Verifying Ticks string
+        ticks_list=request.data["ticks"]
+        if len(ticks_list) != 15:
+            raise Exception('15 Audio ticks required')
+        for x in ticks_list:
+            if not -100 < x < -10 :
+                raise Exception('Ticks must all be between -10 and -100')
+
 
         session = Session.objects.create(
             session=request.data["session_id"],
@@ -54,13 +60,14 @@ class AudioView(ViewSet):
             step_count=request.data["step_count"]
         )
 
+        audiouser = AudioUser.objects.get(user=request.auth.user)
         audio = Audio.objects.create(
             session=session,
             audiouser=audiouser
         )
-
         serializer = AudioSerializer(audio)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
     def update(self, request, pk):
         """Handle PUT requests for a session

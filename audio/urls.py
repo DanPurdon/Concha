@@ -18,10 +18,10 @@ from django.conf.urls import include
 from django.urls import path
 from audioapi.views import register_user, login_user
 from rest_framework import routers
-from audioapi.views import AudioView, SessionView
+from audioapi.views import AudioView, AudioUserView
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'sessions', SessionView, 'session')
+router.register(r'users', AudioUserView, 'user')
 router.register(r'audio', AudioView, 'audio')
 
 

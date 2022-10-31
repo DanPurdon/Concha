@@ -1,25 +1,17 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 import json
 
-def validate_ticks(ticks_string):
+def validate_ticks(value):
     """Validates that ticks list has 15 integers between -10 and -100"""
-    # Double check format of incoming ticks_string
-    ticks_list = ticks_string.get_ticks()
-    # ticks_list = ticks_dict['ticks']
-    if len(ticks_list) != 15:
-        raise ValidationError(
-            _('15 Audio ticks required'),
-            params={'ticks_list': ticks_list},
-        )
-    for x in ticks_list:
+    # Verify format of ticks object/validation conditions
+    # ticks_list = value.ticks
+    if len(value) != 15:
+        raise ValidationError('15 Audio ticks required')
+    for x in value:
         if not -100 > x > -10 :
-            raise ValidationError(
-                _('Ticks must all be between -10 and -100'),
-                params={'ticks_list': ticks_list},
-            )
+            raise ValidationError('Ticks must all be between -10 and -100')
 
 
 class Session(models.Model):

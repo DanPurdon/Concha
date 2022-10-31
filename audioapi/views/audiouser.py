@@ -105,7 +105,9 @@ class AudioUserView(ViewSet):
 
     def destroy(self, request, pk):
         audioUser = AudioUser.objects.get(pk=pk)
+        user = User.objects.get(pk=audioUser.user_id)
         audioUser.delete()
+        user.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
             
 

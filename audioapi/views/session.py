@@ -3,7 +3,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from audioapi.models import Audio, Session, AudioUser
+from audioapi.models import Step, Session, AudioUser
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 
 def verify(request):
@@ -24,46 +24,47 @@ def verify(request):
     count = request.data["step_count"]
     if not -1 < int(count) < 10 :
         raise Exception('Step count must be between 0 and 9')
-class AudioView(ViewSet):
-    """Audio view"""
+
+class SessionView(ViewSet):
+    """Session view"""
 
     def retrieve(self, request, pk):
-        """Handle GET requests for single audio entry
+        """Handle GET requests for single session entry
 
         Returns:
-            Response -- JSON serialized audio entry
+            Response -- JSON serialized session entry
         """
         try:
-            audio = Audio.objects.get(pk=pk)
-            serializer = AudioSerializer(audio)
+            session = Session.objects.get(pk=pk)
+            serializer = SessionSerializer(session)
             return Response(serializer.data)
-        except Audio.DoesNotExist as ex:
+        except Session.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND) 
 
     def list(self, request):
-        """Handle GET requests to get all audio data
+        """Handle GET requests to get all session data
 
         Returns:
-            Response -- JSON serialized list of audio data
+            Response -- JSON serialized list of session data
         """
-        audio = Audio.objects.all()
+        session = Session.objects.all()
 
         # Search Query
-        audio_id = request.query_params.get('id', None)
-        if audio_id is not None:
-            audio = audio.filter(session=audio_id)
+        session_id = request.query_params.get('id', None)
+        if session_id is not None:
+            session = session.filter(session=session_id)
 
-        serializer = AudioSerializer(audio, many=True)
+        serializer = SessionSerializer(session, many=True)
         return Response(serializer.data)
 
     def create(self, request):
         """Handle POST operations
 
         Returns
-            Response -- JSON serialized audio + session instance
+            Response -- JSON serialized session instance
         """
         
-        # Verify audio data
+        # Verify session data
         verify(request)
 
         session = Session.objects.create(
@@ -74,11 +75,11 @@ class AudioView(ViewSet):
         )
 
         audiouser = AudioUser.objects.get(user=request.auth.user)
-        audio = Audio.objects.create(
+        session = Session.objects.create(
             session=session,
             audiouser=audiouser
         )
-        serializer = AudioSerializer(audio)
+        serializer = SessionSerializer(session)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -92,7 +93,6 @@ class AudioView(ViewSet):
         verify(request)
 
         session = Session.objects.get(pk=pk)
-        audio = Audio.objects.get(session_id=session.session)
 
         # Currently allowing session ID to be modified-- if not desired can easily disable
         # Currently not allowing associated user to be modified
@@ -100,28 +100,28 @@ class AudioView(ViewSet):
         session.ticks = request.data["ticks"]
         session.selected_tick = request.data["selected_tick"]
         session.step_count = request.data["step_count"]
-        audio.session_id = request.data["session_id"]
+        session.session_id = request.data["session_id"]
 
         session.save()
-        audio.save()
+        session.save()
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk):
         session = Session.objects.get(pk=pk)
-        audio = Audio.objects.get(session_id=session.session)
+        session = Session.objects.get(session_id=session.session)
         session.delete()
-        audio.delete()
+        session.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
             
 
 
-class AudioSerializer(serializers.ModelSerializer):
-    """JSON serializer for audio
+class SessionSerializer(serializers.ModelSerializer):
+    """JSON serializer for session
     """
     class Meta:
-        model = Audio
-        fields = ('id', 'session', 'audiouser')
-        depth = 2
+        model = Session
+        fields = ('session', 'audiouser', 'ticks', 'selected_tick', 'session_steps')
+        depth = 1
 

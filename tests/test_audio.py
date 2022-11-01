@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from audioapi.models import AudioUser, Audio
-from audioapi.views.audio import AudioSerializer
+from audioapi.views.session import AudioSerializer
 
 class AudioTests(APITestCase):
 

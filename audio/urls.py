@@ -18,11 +18,12 @@ from django.conf.urls import include
 from django.urls import path
 from audioapi.views import register_user, login_user
 from rest_framework import routers
-from audioapi.views import AudioView, AudioUserView
+from audioapi.views import SessionView, AudioUserView, StepView
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'users', AudioUserView, 'user')
-router.register(r'audio', AudioView, 'audio')
+router.register(r'audio', SessionView, 'audio')
+router.register(r'steps', StepView, 'step')
 
 
 urlpatterns = [

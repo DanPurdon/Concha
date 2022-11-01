@@ -1,29 +1,29 @@
 [
     
     {
-        "model": "audioapi.audio",
+        "model": "audioapi.step",
         "pk": 1,
         "fields": {
             "session_id": 1,
-            "audiouser_id": 1
+            "step_count": 1
         }
     },
 
     {
-        "model": "audioapi.audio",
+        "model": "audioapi.step",
         "pk": 2,
         "fields": {
             "session_id": 2,
-            "audiouser_id": 1
+            "step_count": 1
         }
     },
 
     {
-        "model": "audioapi.audio",
+        "model": "audioapi.step",
         "pk": 3,
         "fields": {
             "session_id": 3,
-            "audiouser_id": 2
+            "step_count": 2
         }
     }
 ]

@@ -25,11 +25,53 @@ class AudioTests(APITestCase):
         }
 
         response = self.client.post(url, audio, format='json')
-
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        
         new_audio = Audio.objects.last()
-        
         expected = AudioSerializer(new_audio)
-
         self.assertEqual(expected.data, response.data)
+
+    def test_get_audio(self):
+        """Get single audio entry test"""
+        audio = Audio.objects.first()
+
+        url = f'/audio/{audio.id}'
+
+        response = self.client.get(url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        expected = AudioSerializer(audio)
+        self.assertEqual(expected.data, response.data)
+
+    def test_list_audio(self):
+        """Test list audio"""
+        url = '/audio'
+
+        response = self.client.get(url)
+        
+        all_audio = Audio.objects.all()
+        expected = AudioSerializer(all_audio, many=True)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(expected.data, response.data)
+
+    def test_change_audio(self):
+        """test update audio"""
+        audio = Audio.objects.first()
+
+        url = f'/audio/{audio.session.session}'
+
+        new_tick = audio.session.selected_tick
+        if new_tick == 0:
+            new_tick += 1
+        else:
+            new_tick -= 1 
+
+        updated_audio = {
+            "ticks": audio.session.ticks,
+            "selected_tick": new_tick,
+            "session_id": audio.session.session,
+            "step_count": audio.session.step_count
+        }
+
+        response = self.client.put(url, updated_audio, format='json')
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
+        audio.refresh_from_db()
+        self.assertEqual(updated_audio['selected_tick'], audio.session.selected_tick)

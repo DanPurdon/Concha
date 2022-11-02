@@ -1,6 +1,6 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
-
 import json
 
 def validate_ticks(value):
@@ -19,7 +19,14 @@ def validate_ticks(value):
                 params={'value': value},
                 )
 
-class Session(models.Model):
-    session = models.IntegerField(primary_key=True, unique=True)
-    audiouser = models.ForeignKey("AudioUser", on_delete=models.CASCADE, related_name="user_audio")
-    
+class Step(models.Model):
+    session = models.ForeignKey("Session", on_delete=models.CASCADE, related_name="session_steps")
+    step_count = models.IntegerField(
+        default=0,
+        validators=[MaxValueValidator(9), MinValueValidator(0)]
+    )
+    ticks = models.JSONField(max_length=200, validators=[validate_ticks])
+    selected_tick = models.IntegerField(
+        default=0,
+        validators=[MaxValueValidator(14), MinValueValidator(0)]
+    )

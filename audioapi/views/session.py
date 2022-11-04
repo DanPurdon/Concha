@@ -122,7 +122,7 @@ class SessionView(ViewSet):
         verify(request, int(pk))
 
         # Step ID required from client as PK to modify step information-- I believe this is necessary for this setup
-        # Currently not allowing associated user or step # to be modified but this can be changed if desired
+        # Currently not allowing associated user to be modified but this can be changed if desired
         step.ticks = request.data["ticks"]
         step.selected_tick = request.data["selected_tick"]
         step.step_count = request.data["step_count"]

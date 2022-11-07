@@ -2,15 +2,15 @@
 
 ## ---DOCKER---
 
-## GETTING STARTED:
+### GETTING STARTED:
 In command prompt (with docker installed)
 docker pull danpurdon/concha-web
 
-## CONTAINER FOR TESTS
+### CONTAINER FOR TESTS
 docker run --name conchatests -p 8000:8000 -d danpurdon/concha-web python manage.py test
 -- automatically runs all included unit tests, log in terminal
 
-## CONTAINER FOR SERVER
+### CONTAINER FOR SERVER
 docker run --name conchaserver -p 8000:8000 -d danpurdon/concha-web python manage.py runserver 0.0.0.0:8000
 
 With the server running, you can test API calls using Postman or a similar tool to ensure authentication is working correctly. Use the following information:

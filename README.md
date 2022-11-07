@@ -1,6 +1,6 @@
 # Concha
 
-# ---DOCKER---
+## ---DOCKER---
 
 ## GETTING STARTED:
 In command prompt (with docker installed)

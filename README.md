@@ -19,6 +19,10 @@ http://localhost:8000 (url options are /audio or /users)
 Content-Type application/json
 Authorization Token fa2eba9be8282d595c997ee5cd49f2ed31f65bed
 
+## ---Google Cloud---
+
+You can also use a service like Postman or site24x7.com to access the server directly on Google Cloud. The URL is https://concha-image-vys75e6jbq-uc.a.run.app/ -- once again use the following default user authentication:
+Authorization Token fa2eba9be8282d595c997ee5cd49f2ed31f65bed
 
 ## GET QUERIES
 
